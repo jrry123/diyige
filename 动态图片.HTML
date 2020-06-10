@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ZH">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            position: relative;
+            width: 400px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .box>.items {
+            position: absolute;
+            width: 1200px;
+            height: 300px;
+            border: 1px solid black;
+        }
+
+        .box>.items>.item>a>img {
+            width: 400px;
+            height: 300px;
+            float: left;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <div class=" box">
+        <div class="items" id="items">
+            <div class="item" ><a href="#"><img src="./图片/0.jpg"></a></div>
+            <div class="item" ><a href="#"><img src="./图片/p.jpg"></a></div>
+            <div class="item" ><a href="#"><img src="./图片/g.jpg"></a></div>
+        </div>
+    </div>
+    <!-- <div id="div1" style="width: 100px ; height: 100px ;border: 5px solid  black ;"></div> -->
+    <!-- <button id="div2" onclick="dian()">点我!</button> -->
+    <script>
+
+
+       
+            var count = 0;
+            isfan = true;
+            setInterval(function () {
+                var res = document.getElementById("items").children;
+                for (let i = 0; i < res.length; i++) {
+                    if (isfan == true) {
+                        count -= 1;
+                        res[i].style.marginLeft = count + "px";
+                        isfan = count == -1200 ? false : true;
+
+                    } else if (isfan == false) {
+                        count = 0;
+                        res[i].style.marginLeft = count + "px";
+                        isfan = count == 0 ? true : false;
+                    }
+                    console.log(res);
+                }
+
+            }, 50);
+        
+
+
+
+
+        // var a = document.getElementById("div1").style.marginLeft;
+
+        // var b = 0;
+        // var isfan = true;
+        // function dian() {
+            // setInterval(function () {
+            //     if (isfan == true) {
+            //         b++;
+            //         div1.style.marginLeft = b + "px"
+            //         isfan = b == 1000 ? false : true;
+            //     } else if (isfan == false) {
+            //         b--;
+            //         div1.style.marginLeft = b + "px"
+            //         isfan = b == 1 ? true : false;
+            //     }
+            // },50);
+        // }
+    </script>
+</body>
+
+</html>

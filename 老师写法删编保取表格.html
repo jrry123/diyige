@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <table id="tab" border="1">
+    </table>
+    <script>
+        var num1 = 0;
+        var isfan = true;
+
+        function total(y, z) {
+            return this.x + y + z;
+        }
+        var m = total.bind({
+            x: 1
+        }, 2);
+        console.log(m(4))
+            // setInterval(function(){
+            //     if(isfan == true){
+            //         num1++;
+            //         isfan = num == 500?false:true;
+            //     }else if(isfan == false){
+            //         num1--;
+            //         isfan = num == -500 ? true : false;
+            //     }
+            // }, 500);
+
+        var userlist = [{
+            id: 1,
+            name: '张三',
+            sex: 0,
+            achievement: 85
+        }, {
+            id: 2,
+            name: '李四',
+            sex: 1,
+            achievement: 70
+        }, {
+            id: 3,
+            name: '王五',
+            sex: 1,
+            achievement: 90
+        }, {
+            id: 4,
+            name: '马六',
+            sex: 0,
+            achievement: 60
+        }];
+
+        var order = 0; //0正序   1倒序
+        //把方法当做参数来传递
+
+        // var res = userlist.sort(function(a,b){
+        //     if(a.achievement > b.achievement){
+        //         return -1;
+        //     }
+        //     if(a.achievement < b.achievement){
+        //         return 1;
+        //     }
+        // });
+
+        // function btnedit() {
+        //     var tableId = document.getElementById("tab");
+        //     var str = "";
+        //     console.log(tableId.rows);
+        //     for (var i = 1; i < tableId.rows.length; i++) {
+        //         //alert(tableId.rows[i].cells[0].innerHTML);
+        //     }
+        // }
+        //onmouseover
+        //onmouseout
+
+        reload();
+
+        var events = {
+            cellInput: { // 当前列隐藏的文本框
+                index: 1,
+                tagName: "input",
+            },
+            cellP: { //当前列显示的P标签
+                index: 1,
+                tagName: "p",
+            },
+            //删除按钮的事件
+            del: function(e) {
+                console.log(this.innerText);
+                var index = e.currentTarget.getAttributeAll("data-songkun");
+                var res = confirm("是否删除？当前的索引是   " + index);
+                //true 和 false
+                if (res == true) {
+                    console.log('已经删除!');
+                    userlist.splice(index, 1);
+                    reload();
+                } else if (res == false) {
+                    console.log('取消删除!');
+                }
+            },
+            //编辑按钮的事件
+            edit: function(e) {
+
+                this.cellInput.input = e;
+                this.cellP.input = e;
+                this.cells(this.cellInput).style.display = "block";
+                this.cells(this.cellP).style.display = "none";
+
+                e.parentNode.parentNode.cells[1].querySelector("input").value = e.parentNode.parentNode.cells[1].querySelector("p").innerHTML;
+                var array = e.parentNode.querySelectorAll("button");
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i].innerText == "编辑" || array[i].innerText == "删除") {
+                        array[i].style.display = "none";
+                    }
+                    if (array[i].innerText == "保存" || array[i].innerText == "取消") {
+                        array[i].style.display = "block";
+                    }
+                }
+            },
+            save: function(e) {
+                this.cellInput.input = e;
+                this.cellP.input = e;
+                this.cells(this.cellInput).style.display = "none";
+                this.cells(this.cellP).style.display = "block";
+
+                e.parentNode.parentNode.cells[1].querySelector("p").innerHTML = e.parentNode.parentNode.cells[1].querySelector("input").value;
+
+                var array = e.parentNode.querySelectorAll("button");
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i].innerText == "编辑" || array[i].innerText == "删除") {
+                        array[i].style.display = "block";
+                    }
+                    if (array[i].innerText == "保存" || array[i].innerText == "取消") {
+                        array[i].style.display = "none";
+                    }
+                }
+            },
+            canel: function(e) {
+                this.cellInput.input = e;
+                this.cellP.input = e;
+                //this => events
+                this.cells(this.cellInput).style.display = "none";
+                this.cells(this.cellP).style.display = "block";
+
+                var array = e.parentNode.querySelectorAll("button");
+                for (var i = 0; i < array.length; i++) {
+                    if (array[i].innerText == "编辑" || array[i].innerText == "删除") {
+                        array[i].style.display = "block";
+                    }
+                    if (array[i].innerText == "保存" || array[i].innerText == "取消") {
+                        array[i].style.display = "none";
+                    }
+                }
+            },
+            show: function() {
+                //console.log(this.name)
+                var showinfo = function() {
+                    console.log(this.name);
+                }
+                showinfo.bind(this)();
+            },
+            //index 指的是获取的那一列  index,tagName,input
+            //tagName 标签的名字 #id  .classname
+            //input 表示的是当前的元素 => 取消按钮这个对象
+            cells: function(cell) {
+                return cell.input.parentNode.parentNode.cells[cell.index].querySelector(cell.tagName)
+            }
+        }
+
+        function tabOrder() {
+            if (order == 1) {
+                userlist.sort(function(a, b) {
+                    if (a.achievement > b.achievement) {
+                        return -1;
+                    }
+                    if (a.achievement < b.achievement) {
+                        return 1;
+                    }
+                });
+                order = 0;
+                reload();
+            } else if (order == 0) {
+                userlist.sort(function(a, b) {
+                    if (a.achievement < b.achievement) {
+                        return -1;
+                    }
+                    if (a.achievement > b.achievement) {
+                        return 1;
+                    }
+                });
+                order = 1;
+                reload();
+            }
+        }
+
+        //表格的按钮事件
+        function tabBtn(e) {
+            events[this.getAttribute("data-type")].call(events, this);
+        }
+
+
+
+
+        function trmouseout(e) {
+            this.style.backgroundColor = "#ffffff";
+        }
+
+        function trmouseover(e) {
+            this.style.backgroundColor = "#666666";
+        }
+
+        function reload() {
+            document.getElementById("tab").innerHTML = "";
+            var restab = document.getElementById("tab");
+            var titleTr = document.createElement("tr");
+            var titleTd1 = document.createElement("td");
+            var titleTd2 = document.createElement("td");
+            var titleTd3 = document.createElement("td");
+            var titleTd4 = document.createElement("td");
+            var titleTd5 = document.createElement("td");
+            titleTd1.innerHTML = "索引";
+            titleTd2.innerHTML = "名字";
+            titleTd3.innerHTML = "性别";
+            titleTd4.innerHTML = "成绩";
+            titleTd5.innerHTML = "操作";
+            titleTd4.onclick = tabOrder;
+            titleTr.appendChild(titleTd1);
+            titleTr.appendChild(titleTd2);
+            titleTr.appendChild(titleTd3);
+            titleTr.appendChild(titleTd4);
+            titleTr.appendChild(titleTd5);
+
+            restab.appendChild(titleTr);
+
+            for (var i = 0; i < userlist.length; i++) {
+                var newTr = document.createElement("tr");
+                var newTd0 = document.createElement("td");
+                var newTd1 = document.createElement("td");
+                var newTd2 = document.createElement("td");
+                var newTd3 = document.createElement("td");
+                var newTd4 = document.createElement("td");
+
+
+                newTr.onmouseover = trmouseover;
+                newTr.onmouseout = trmouseout;
+                //删除按钮
+                var btnDel = document.createElement("button");
+                btnDel.setAttribute("data-songkun", this);
+                btnDel.setAttribute("data-type", "del");
+                //num 就是索引
+                //e 是事件源
+                btnDel.onclick = tabBtn;
+                btnDel.innerHTML = "删除";
+                newTd4.appendChild(btnDel);
+
+                //编辑按钮
+                var btnEdit = document.createElement("button");
+                btnEdit.setAttribute("data-songkun", i);
+                btnEdit.setAttribute("data-type", "edit");
+                //num 就是索引
+                //e 是事件源
+                btnEdit.onclick = tabBtn;
+                btnEdit.innerHTML = "编辑";
+                newTd4.appendChild(btnEdit);
+
+                //保存按钮
+                var btnSave = document.createElement("button");
+                btnSave.setAttribute("data-songkun", i);
+                btnSave.setAttribute("data-type", "save");
+                btnSave.setAttribute("style", "display:none");
+                btnSave.onclick = tabBtn;
+                btnSave.innerHTML = "保存";
+                newTd4.appendChild(btnSave);
+
+                //取消按钮
+                var btnCanel = document.createElement("button");
+                btnCanel.setAttribute("data-songkun", i);
+                btnCanel.setAttribute("data-type", "canel");
+                btnCanel.setAttribute("style", "display:none");
+                btnCanel.onclick = tabBtn;
+                btnCanel.innerHTML = "取消";
+                newTd4.appendChild(btnCanel);
+
+
+
+                newTd0.innerHTML = userlist[i].id;
+                var newTdp = document.createElement("p");
+                newTdp.innerHTML = userlist[i].name;
+                newTd1.appendChild(newTdp);
+
+
+
+                //动态添加一个input文本框
+                var editInput = document.createElement("input");
+                editInput.setAttribute("type", "text");
+                editInput.setAttribute("style", "display:none");
+                editInput.value = "我是大傻子";
+                newTd1.appendChild(editInput);
+
+
+
+                newTd2.innerHTML = userlist[i].sex == 0 ? "男" : "女";
+
+                if (userlist[i].achievement > 60) {
+                    newTd3.style.color = "green";
+                } else {
+                    newTd3.style.color = "red";
+                }
+                newTd3.innerHTML = userlist[i].achievement;
+                newTr.appendChild(newTd0);
+
+                newTr.appendChild(newTd1);
+
+
+                newTr.appendChild(newTd2);
+                newTr.appendChild(newTd3);
+                newTr.appendChild(newTd4);
+                restab.appendChild(newTr);
+            }
+        }
+    </script>
+</body>
+
+</html>

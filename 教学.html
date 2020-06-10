@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+
+        var request = new XMLHttpRequest();
+        request.open("GET", "https://c463a3e0-9ea8-49e6-a84f-cc5d0f8b137b.mock.pstmn.io/newlist", true);
+        request.onreadystatechange = function () {
+           
+            if (request.readyState == 4 && request.status == 200) {
+                 
+                console.log(request.responseText);
+                var res = JSON.parse(request.responseText);
+                alert(res.errCode)
+            }
+        };
+        request.send();
+    </script>
+
+</body>
+
+</html>
